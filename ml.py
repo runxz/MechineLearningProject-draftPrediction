@@ -1,11 +1,13 @@
 import pandas as pd
+from sklearn.preprocessing import OneHotEncoder
 from sklearn.ensemble import RandomForestClassifier
 
 # Load the data
-data = pd.read_csv("match_data.csv")
+data = pd.read_csv("https://raw.githubusercontent.com/runxz/MechineLearningProject-draftPrediction/main/match_data.csv")
 
-# Split the data into features and labels
-X = data[['team_1_player_1', 'team_1_player_2', 'team_1_player_3', 'team_1_player_4','team_1_player_5','team_2_player_1', 'team_2_player_2', 'team_2_player_3','team_2_player_4','team_2_player_5']]
+# One-hot encode the categorical variables
+encoder = OneHotEncoder()
+X = encoder.fit_transform(data[['team_1_player_1', 'team_1_player_2', 'team_1_player_3', 'team_1_player_4','team_1_player_5','team_2_player_1', 'team_2_player_2', 'team_2_player_3','team_2_player_4','team_2_player_5']])
 y = data['result']
 
 # Split the data into training and test sets
@@ -26,7 +28,7 @@ team_1_players = team_1.split(",")
 team_2_players = team_2.split(",")
 
 # Create a feature array for the user input
-X_input = [team_1_players + team_2_players]
+X_input = encoder.transform([team_1_players + team_2_players])
 
 # Make a prediction using the classifier
 prediction = clf.predict(X_input)
